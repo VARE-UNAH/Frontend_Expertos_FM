@@ -1,0 +1,22 @@
+#!/bin/bash# Construir la imagen para Fitmentor en la plataforma linux/amd64
+docker buildx build --platform linux/amd64 -t acrfmdev.azurecr.io/fm/ui:latest . --load
+
+# Iniciar sesión en Azure
+az login
+
+# Iniciar sesión en el Azure Container Registry (ACR)
+az acr login --name acrfmdev
+
+# Etiquetar la imagen para el ACR con la etiqueta 'latest'
+docker tag acrfmdev.azurecr.io/fm/ui:latest acrfmdev.azurecr.io/fm/ui:latest
+
+# Etiquetar la imagen para el ACR con una versión específica (en este caso 0.1.10)
+docker tag acrfmdev.azurecr.io/fm/ui:latest acrfmdev.azurecr.io/fm/ui:0.1.12
+
+# Publicar la imagen etiquetada como 'latest' en el ACR
+docker push acrfmdev.azurecr.io/fm/ui:latest
+
+# Publicar la imagen etiquetada como versión '0.1.10' en el ACR
+docker push acrfmdev.azurecr.io/fm/ui:0.1.12
+
+
