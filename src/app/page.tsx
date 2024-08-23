@@ -9,12 +9,50 @@ import { auth } from "@/app/firebase/firebase"; // Importamos la instancia de au
 import Loader from "@/components/common/Loader";
 import { useValidateToken } from "@/services/user/authService";
 import { Toaster, toast } from 'sonner'
+import { fetchUserProfile } from "@/services/user/userService";
+
+interface Person {
+  firstName: string;
+  lastName: string;
+}
+
+interface UserProfile {
+  user: {
+    id: number;
+    email: string;
+    active: boolean;
+    verified: boolean;
+    firebaseUid: string;
+  };
+  person: Person;
+}
 
 export default function Home() {
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
   const router = useRouter();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   useValidateToken();
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      const cachedProfile = localStorage.getItem("userProfile");
+      if (cachedProfile) {
+        setUserProfile(JSON.parse(cachedProfile));
+        setLoading(false);
+      } else {
+        try {
+          const userinfo = await fetchUserProfile();
+          setUserProfile(userinfo);
+          localStorage.setItem("userProfile", JSON.stringify(userinfo));
+        } catch (err) {
+          console.error("Error al obtener el perfil del usuario:", err);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
 
+    loadUserProfile();
+  }, []);
   useEffect(() => {
     const checkAuth = async () => {
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -32,7 +70,6 @@ export default function Home() {
             router.push("/auth/signin");
           } else {
             setLoading(false); // Detenemos el estado de carga si el token es válido
-            toast('Bienvenido Hector Varela')
             console.log("Bienvenido")
           }
         } else {

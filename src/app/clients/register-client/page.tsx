@@ -11,8 +11,10 @@ import { fetchPlans } from "@/services/plans/planService";
 import { createClients } from "@/services/clients/clientsService";
 import { Toaster, toast } from 'sonner'
 import { useRouter } from "next/navigation";
+import { useValidateToken } from "@/services/user/authService";
 
 const TablesPage = () => {
+  useValidateToken();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [plans, setPlans] = useState<Plan[]>([]);

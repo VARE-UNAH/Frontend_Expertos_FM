@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import LoginLayout from "@/components/Layouts/LoginLayout";
+import { SignUpFormValidator } from "@/validators/auth/authValidators";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/app/firebase/firebase";
 import Alert from "@/components/Alert/alertred";
 import axios from 'axios';
 import { FirebaseError } from "firebase/app";
-
+import {toast} from 'sonner'
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -19,11 +20,20 @@ const SignUp = () => {
   const [lastName, setLastName] = useState("");
   const router = useRouter();
   const [error, setError] = useState("");
+  const [ warningMessage, setWarningMessage ] = useState([""]);
 
   const handleSignUp = async () => {
+    const wa = SignUpFormValidator(email, password, confirmPassword, name, lastName);
+        setWarningMessage(wa);
+        if (wa.length === 0) {
+        }else{
+          wa.forEach(element => {
+            toast.error(`${wa}`);
+          });
+        };
     if (password !== confirmPassword) {
       console.error("Las contraseñas no coinciden");
-      setError("Las contraseñas no coinciden");
+      toast.error("Las contraseñas no coinciden");
       return;
     }
 
@@ -32,13 +42,13 @@ const SignUp = () => {
 
     if (nameParts.length < 1 || nameParts.length > 2) {
       console.error("El campo 'Nombres' debe contener una o dos palabras.");
-      setError("El campo 'Nombres' debe contener una o dos palabras.");
+      toast.error("El campo 'Nombres' debe contener una o dos palabras.");
       return;
     }
 
     if (lastNameParts.length < 1 || lastNameParts.length > 2) {
       console.error("El campo 'Apellidos' debe contener una o dos palabras.");
-      setError("El campo 'Apellidos' debe contener una o dos palabras.");
+      toast.error("El campo 'Apellidos' debe contener una o dos palabras.");
       return;
     }
 
@@ -74,6 +84,7 @@ const SignUp = () => {
         router.push("/"); // Redirige a la página del dashboard tras iniciar sesión
       } catch (backendError) {
         console.error(`Error al registrar el usuario en la base de datos : `, backendError, );
+        toast.error("Error al registrar el usuario en la base de datos")
         setError("Error al registrar el usuario. Inténtalo de nuevo.");
       }
 
