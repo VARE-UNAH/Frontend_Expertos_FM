@@ -1,9 +1,10 @@
 'use client'
 import { fetchClients } from "@/services/clients/clientsService";
-import { Client } from "@/types/client";
+import { Client, ClientResponse } from "@/types/client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Loader from "../common/Loader";
+import { Pagination } from "antd";
 
 interface TableOneProps {
   searchTerm: string;
@@ -11,16 +12,37 @@ interface TableOneProps {
 
 const TableOne: React.FC<TableOneProps> = ({ searchTerm }) => {
   const [clients, setClients] = useState<Client[]>([]);
+  const [response, setResponse] = useState<ClientResponse | null>(null);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [isLoading, setIsLoading] = useState(true); // Estado de carga
-
-  useEffect(() => {
-    const getClients = async () => {
-      const data = await fetchClients();
-      setClients(data); // Data es un array de objetos Client
+  const [currentPage, setCurrentPage] = useState<number>(1); // Página actual
+  // Define la función getClients fuera de useEffect
+  const getClients = async (page: number, size: number) => {
+    setIsLoading(true);
+    try {
+      const data: ClientResponse = await fetchClients(page, size);
+      setClients(data.clients);
+      setTotalItems(data.totalItems);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+    } finally {
       setIsLoading(false);
-    };
-    getClients();
-  }, []);
+    }
+  };
+
+  // useEffect que se ejecuta cuando cambian currentPage o pageSize
+  useEffect(() => {
+    getClients(currentPage, pageSize);
+  }, [currentPage, pageSize]);
+
+  // Actualiza la función handlePageChange
+  const handlePageChange = (page: number, size?: number) => {
+    setCurrentPage(page);
+    if (size) {
+      setPageSize(size);
+    }
+  };
 
   const filteredClients = clients.filter(client =>
     `${client.firstName} ${client.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -148,7 +170,12 @@ const TableOne: React.FC<TableOneProps> = ({ searchTerm }) => {
           </div>
         ))}
       </div>
+      <div className="flex items-center justify-center"> 
+          <Pagination total={totalItems} pageSize={pageSize} onChange={handlePageChange} current={currentPage} />
+          
+        </div>
     </div>
+    
   );
 };
 

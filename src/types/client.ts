@@ -35,6 +35,12 @@ export interface Client {
   };
 }
 
+export interface ClientResponse {
+  clients: Client[];
+  totalItems: number;
+  pageSize: number;
+}
+
 export interface ClientFormData {
   DNI: string;
   firstName: string;

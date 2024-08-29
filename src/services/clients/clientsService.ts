@@ -1,7 +1,7 @@
 import { ClientFormData } from '@/types/client';
 import axios from 'axios';
 
-export const fetchClients = async () => {
+export const fetchClients = async (page: number, pageSize: number ) => {
   try {
     // Obtén el token almacenado en localStorage
     const accessToken = localStorage.getItem('accessToken');
@@ -12,7 +12,7 @@ export const fetchClients = async () => {
     }
 
     // Realiza la solicitud GET con el token en el encabezado de autorización
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/clients`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/clients?page=${page}&pageSize=${pageSize}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

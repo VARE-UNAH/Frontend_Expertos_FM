@@ -47,9 +47,7 @@ const TablesPage = () => {
       </div>
       <div className="flex flex-col gap-10">
         <TableOne searchTerm={searchTerm} />
-        <div className="flex items-center justify-center"> 
-          <Pagination defaultCurrent={6} total={500} />
-        </div>
+        
       </div>
     </DefaultLayout>
   );
