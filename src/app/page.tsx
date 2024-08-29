@@ -11,6 +11,7 @@ import { useValidateToken } from "@/services/user/authService";
 import { Toaster, toast } from 'sonner'
 import { fetchUserProfile } from "@/services/user/userService";
 
+
 interface Person {
   firstName: string;
   lastName: string;
