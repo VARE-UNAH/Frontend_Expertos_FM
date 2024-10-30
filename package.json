@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
+    "@next/font": "^14.2.15",
     "antd": "^5.20.3",
     "apexcharts": "^3.45.2",
     "axios": "^1.7.4",

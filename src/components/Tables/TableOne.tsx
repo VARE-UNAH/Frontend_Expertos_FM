@@ -44,10 +44,6 @@ const TableOne: React.FC<TableOneProps> = ({ searchTerm }) => {
     }
   };
 
-  const filteredClients = clients.filter(client =>
-    `${client.firstName} ${client.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client?.plan?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   if (isLoading) {
     return <Loader />; // Mostrar un mensaje mientras carga
@@ -112,10 +108,10 @@ const TableOne: React.FC<TableOneProps> = ({ searchTerm }) => {
           </div>
         </div>
 
-        {filteredClients.map((client, key) => (
+        {clients.map((client, key) => (
           <div
             className={`grid grid-cols-3 sm:grid-cols-10 ${
-              key === filteredClients.length - 1
+              key === clients.length - 1
                 ? ""
                 : "border-b border-stroke dark:border-strokedark"
             }`}
@@ -170,7 +166,7 @@ const TableOne: React.FC<TableOneProps> = ({ searchTerm }) => {
           </div>
         ))}
       </div>
-      <div className="flex items-center justify-center"> 
+      <div className="flex items-center justify-center mb-5"> 
           <Pagination total={totalItems} pageSize={pageSize} onChange={handlePageChange} current={currentPage} />
           
         </div>

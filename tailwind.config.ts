@@ -328,6 +328,9 @@ const config: Config = {
         line2: "line-revert 8s infinite linear",
         line3: "line 7s infinite linear",
       },
+      fontFamily: {
+
+      },
     },
   },
   plugins: [],

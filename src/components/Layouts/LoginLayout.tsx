@@ -10,11 +10,10 @@ export default function LoginLayout({
 }) {
     return (
         <>
-            <main className="flex items-center justify-center min-h-screen">
-                <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+            <main className="justify-center min-h-screen">
                     {children}
                     <Toaster position="top-right"/>
-                </div>
+                
             </main>
         </>
     );
